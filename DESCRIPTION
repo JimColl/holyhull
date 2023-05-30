@@ -1,0 +1,12 @@
+Package: holyhull
+Type: Package
+Title: Wrap Your Points in a Hull Batman!
+Version: 0.0.01
+Author: Jim Coll et al.
+Maintainer: Jim Coll <jamesmcoll@gmail.com>
+Description: A wrapper around several useful hull creation tools and utilities.  Why is this so hard?
+    new line with 4 spaces
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
