@@ -2,29 +2,29 @@
 % Please edit documentation in R/arc2line.R
 \name{arc2line}
 \alias{arc2line}
-\title{FUNCTION_TITLE}
+\title{arc2line}
 \usage{
 arc2line(center, r, vector, theta, npoints = 100)
 }
 \arguments{
-\item{center}{PARAM_DESCRIPTION}
+\item{center}{pass through for hull object}
 
-\item{r}{PARAM_DESCRIPTION}
+\item{r}{pass through for hull object}
 
-\item{vector}{PARAM_DESCRIPTION}
+\item{vector}{pass through for hull object}
 
-\item{theta}{PARAM_DESCRIPTION}
+\item{theta}{pass through for hull object}
 
-\item{npoints}{PARAM_DESCRIPTION, Default: 100}
+\item{npoints}{pass through for hull object, Default: 100}
 }
 \value{
-OUTPUT_DESCRIPTION
+sp lines
 }
 \description{
-FUNCTION_DESCRIPTION
+gratefully pilfered from alphahull
 }
 \details{
-DETAILS
+Code gratefully pilfered from alphahull package so that I could expose parameters
 }
 \examples{
 \dontrun{

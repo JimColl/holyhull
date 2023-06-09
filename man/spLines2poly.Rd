@@ -2,7 +2,7 @@
 % Please edit documentation in R/spLines2poly.R
 \name{spLines2poly}
 \alias{spLines2poly}
-\title{FUNCTION_TITLE}
+\title{spLines2poly}
 \usage{
 spLines2poly(sp_lines)
 }
@@ -13,10 +13,10 @@ spLines2poly(sp_lines)
 OUTPUT_DESCRIPTION
 }
 \description{
-FUNCTION_DESCRIPTION
+gratefully pilfered and wrapper-d around alphahull
 }
 \details{
-DETAILS
+Code gratefully pilfered from alphahull package so that I could expose parameters
 }
 \examples{
 \dontrun{

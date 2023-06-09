@@ -2,21 +2,21 @@
 % Please edit documentation in R/ahull2lines.R
 \name{ahull2lines}
 \alias{ahull2lines}
-\title{FUNCTION_TITLE}
+\title{ahull2lines}
 \usage{
 ahull2lines(hull)
 }
 \arguments{
-\item{hull}{PARAM_DESCRIPTION}
+\item{hull}{pass through for hull object}
 }
 \value{
-OUTPUT_DESCRIPTION
+a SpatialLines object
 }
 \description{
-FUNCTION_DESCRIPTION
+gratefully pilfered from alphahull
 }
 \details{
-DETAILS
+Code gratefully pilfered from alphahull package so that I could expose parameters
 }
 \examples{
 \dontrun{

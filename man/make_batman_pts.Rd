@@ -2,15 +2,15 @@
 % Please edit documentation in R/make_batman_pts.R
 \name{make_batman_pts}
 \alias{make_batman_pts}
-\title{FUNCTION_TITLE}
+\title{make_batman_pts}
 \usage{
 make_batman_pts()
 }
 \value{
-OUTPUT_DESCRIPTION
+geojson formatted point type FeatureCollection
 }
 \description{
-FUNCTION_DESCRIPTION
+Returns a toy set of batman themed points which are used in test plotting.
 }
 \details{
 DETAILS

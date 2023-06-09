@@ -1,8 +1,8 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
+#' @title ashape2poly
+#' @description gratefully pilfered from alphahull
 #' @param ashape PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @return pathX pts
+#' @details Code gratefully pilfered from alphahull package so that I could expose parameters
 #' @examples
 #' \dontrun{
 #' if(interactive()){

@@ -1,12 +1,12 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param sf_frame PARAM_DESCRIPTION, Default: NULL
-#' @param method PARAM_DESCRIPTION, Default: 'test'
-#' @param alpha_value PARAM_DESCRIPTION, Default: 0.01
-#' @param concavity PARAM_DESCRIPTION, Default: 2
+#' @title holyhull
+#' @description A wrapper around several useful hull creation tools and utilities with a common entry point
+#' @param sf_frame sf points in 4236 that you want to wrap, Default: NULL
+#' @param method string to control what hull to generate. One of 'test' for a comparison map concave for concaveman ahull for alphahull or, Default: 'test'
+#' @param alpha_value Alpha value to pass to alphahull execution, Default: 0.01
+#' @param concavity concavity value to pass to concaveman execution, Default: 2
 #' @param length_threshold PARAM_DESCRIPTION, Default: 0
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @return requested hull or st_convex_hull if requested hull errors out
+#' @details master wrapper through which data is accessed
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -29,120 +29,73 @@
 #' @importFrom sf st_as_sf st_set_crs st_crs st_convex_hull st_union st_transform st_coordinates
 #' @importFrom concaveman concaveman
 holyhull = function(sf_frame=NULL,method='test',alpha_value=0.01, concavity = 2, length_threshold = 0) {
-  # sf_frame=end_points
-  # method='concave'
-  # alpha_value=0.01
-  # concavity = 2
-  # length_threshold = 0
-
-  fn_ahull2lines <- function(hull) {
-    arclist <- hull$arcs
-    lines <- list()
-    for (i in 1:nrow(arclist)) {
-      # Extract the attributes of arc i
-      center_i <- arclist[i, 1:2]
-      radius_i <- arclist[i, 3]
-      vector_i <- arclist[i, 4:5]
-      theta_i <- arclist[i, 6]
-      # Convert arc i into a Line object
-      line_i <- fn_arc2line(center = center_i, r = radius_i, vector = vector_i, theta = theta_i)
-      list_length <- length(lines)
-      if(list_length > 0){
-        # If a line has already been added to the list of lines
-        # Define last_line_coords as the coordinates of the last line added to the list before the ith line
-        last_line_coords <- lines[[list_length]]@coords
-      }
-      if(i == 1){
-        # Add the first line to the list of lines
-        lines[[i]] <- line_i
-      } else if(isTRUE(all.equal(line_i@coords[1,], last_line_coords[nrow(last_line_coords),]))){
-        # If the first coordinate in the ith line is equal to the last coordinate in the previous line
-        # then those lines should be connected
-        # Row bind the coordinates for the ith line to the coordinates of the previous line in the list
-        lines[[list_length]]@coords <- rbind(last_line_coords, line_i@coords[2:nrow(line_i@coords),])
-      } else {
-        # If the first coordinate in the ith line does not match the last coordinate in the previous line
-        # then the ith line represents a new line
-        # Add the ith line to the list as a new element
-        lines[[length(lines) + 1]] <- line_i
-      }
-    }
-    # Convert the list of lines to a Line object
-    lines <- sp::Lines(lines, ID = 'l')
-    # Convert the Line object to a SpatialLines object
-    sp_lines <- sp::SpatialLines(list(lines))
-    return(sp_lines)
-  }
-  fn_arc2line <- function(center, r, vector, theta, npoints = 100) {
-    # Get the angles at the extremes of the arcs
-    angles <- alphahull::anglesArc(vector, theta)
-    # Generate sequence of angles along the arc to determine the points
-    seqang <- seq(angles[1], angles[2], length = npoints)
-    # Generate x coordinates for points along the arc
-    x <- center[1] + r * cos(seqang)
-    # Generate y coordinates for points along the arc
-    y <- center[2] + r * sin(seqang)
-    coords.xy <- cbind(x,y)
-    line <- sp::Line(coords = coords.xy)
-    return(line)
-  }
-  fn_spLines2poly <- function(sp_lines){
-    # Extract the lines slot
-    lines_slot <- sp_lines@lines[[1]]
-    # Create a list of booleans indicating whether a given Line represents a polygon
-    poly_bool <- sapply(lines_slot@Lines, function(x){
-      coords <- lines_slot@Lines[[1]]@coords
-      # Check if the first coordinate in the line is the same as the last
-      all.equal(coords[1,], coords[nrow(coords),])
-    })
-    # Pull out the lines that form polygons
-    poly_lines <- sp_lines[poly_bool]
-    poly_lines_slot <- poly_lines@lines
-    # Create SpatialPolygons
-    sp_polys <- sp::SpatialPolygons(list(sp::Polygons(lapply(poly_lines_slot, function(x) {
-      sp::Polygon(slot(slot(x, "Lines")[[1]], "coords"))
-    }), ID = "1")))
-    return(sp_polys)
-  }
-  fn_ashape2poly <- function(ashape){
-    # Convert node numbers into characters
-    ashape$edges[,1] <- as.character(ashape$edges[,1])
-    ashape_graph <- igraph::graph_from_edgelist(ashape$edges[,1:2], directed = FALSE)
-    if (!igraph::is.connected(ashape_graph)) {
-      stop("Graph not connected")
-    }
-    if (any(igraph::degree(ashape_graph) != 2)) {
-      stop("Graph not circular")
-    }
-    if (igraph::clusters(ashape_graph)$no > 1) {
-      stop("Graph composed of more than one circle")
-    }
-    # Delete one edge to create a chain
-    cut_graph <- ashape_graph - igraph::E(ashape_graph)[1]
-    # Find chain end points
-    ends = names(which(igraph::degree(cut_graph) == 1))
-    path = igraph::get.shortest.paths(cut_graph, ends[1], ends[2])$vpath[[1]]
-    # this is an index into the points
-    pathX = as.numeric(igraph::V(ashape_graph)[path]$name)
-    # join the ends
-    pathX = c(pathX, pathX[1])
-    return(pathX)
-  }
-  st_alpha_hull <- function(x_in_4326,y_in_4326,alpha_value=0.01){
-    ahull = alphahull::ahull(x = x_in_4326,
-                             y = y_in_4326,
-                             alpha = alpha_value)
-    ahull_lines = fn_ahull2lines(ahull)
-    ahull_poly = fn_spLines2poly(ahull_lines) %>%
-      sf::st_as_sf() %>%
-      sf::st_set_crs(sf::st_crs("EPSG:4326"))
-    return(ahull_poly)
-  }
 
   if(method=='test') {
-    # ahull_poly = concaveman::concaveman(batman_pts, concavity = 2, length_threshold = 0)
-    # ahull_poly = st_alpha_hull(x = sf::st_coordinates(batman_pts)[,1],y = sf::st_coordinates(batman_pts)[,2],alpha = alpha_value)
-    ahull_poly = sf::st_convex_hull(sf::st_union(batman_pts))
+    batman_pts <- make_batman_pts()
+
+    concave_poly = concaveman::concaveman(batman_pts, concavity = concavity, length_threshold = length_threshold)
+    ahull_poly = st_alpha_hull(x = sf::st_coordinates(batman_pts)[,1],y = sf::st_coordinates(batman_pts)[,2],alpha = alpha_value) |> sf::st_transform(sf::st_crs("EPSG:4326"))
+    st_poly = sf::st_convex_hull(sf::st_union(batman_pts))
+
+    batmap <- leaflet::leaflet(options = leaflet::leafletOptions(preferCanvas = TRUE)) |>
+      # leaflet::addProviderTiles("OpenStreetMap",group = "OpenStreetMap") |>
+      # leaflet::addProviderTiles("Stamen.Toner",group = "Stamen.Toner") |>
+      leaflet::addProviderTiles("Stamen.Terrain",group = "Stamen.Terrain") |>
+      # leaflet::addProviderTiles("Esri.WorldStreetMap",group = "Esri.WorldStreetMap") |>
+      # leaflet::addProviderTiles("Wikimedia",group = "Wikimedia") |>
+      # leaflet::addProviderTiles("CartoDB.Positron",group = "CartoDB.Positron") |>
+      # leaflet::addProviderTiles("Esri.WorldImagery",group = "Esri.WorldImagery") |>
+      leafem::addFeatures(st_poly, color = "red",fillColor = 'red',fillOpacity = 0.1,group = "st_convex") |>
+      leafem::addFeatures(ahull_poly, color = "gold",fillColor = 'gold',fillOpacity = 0.1,group = "ahull") |>
+      leafem::addFeatures(concave_poly, color = "black",fillColor = 'black',fillOpacity = 0.1,group = "concaveman") |>
+      leaflet::addCircleMarkers(lng = unlist(purrr::map(batman_pts$geometry,1)),
+                                             lat= unlist(purrr::map(batman_pts$geometry,2)),
+        radius = 2,
+        color = "yellow",
+        stroke = FALSE, fillOpacity = 0.8
+      ) |>
+      leaflet::addLegend("bottomright",colors = c("yellow","black","gold","red"),
+                         labels = c("Points", "concaveman","alphahull","convex hull"),title = "Holy Hull Batman!",opacity = 1)
+    mapview::mapshot(batmap,file=file.path("C:/Users/jimma/Desktop/map/RRASSLER_images",glue::glue('temp.png')))
+
+    title <- cowplot::ggdraw() + cowplot::draw_label(glue::glue("XS id: {id} from model: {basename(gfile_path)}"), fontface='bold')
+    main_grid <- cowplot::plot_grid(
+      g_plot + ggplot2::ggtitle("Parsed from G file") + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 1.0)),
+      h_plot + ggplot2::ggtitle("DEM values") + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 1.0)),
+
+      union_plot + ggplot2::ggtitle("Overlayed data") + ggplot2::theme(legend.position="bottom",plot.title = ggplot2::element_text(hjust = 1.0)),
+      ggplot2::ggplot() + ggplot2::ggtitle("Selected XS") + cowplot::draw_image(image = magick::image_read(file.path(outpath,"RRASSLER_images",glue::glue('temp_{id}.png'))),scale = 1.2) + ggplot2::theme_void() + ggplot2::theme(plot.title = ggplot2::element_text(hjust = 1.0)),
+
+      align = "hv",
+      axis = 'tblr',
+      # label_fontface = "bold",
+      # label_fontfamily = "Times New Roman",
+      label_size = 8,
+      rel_widths = c(1, 1),
+      rel_heights = c(1,1),
+      ncol = 2,
+      nrow = 2,
+      hjust = 0.5,
+      vjust = 0.5
+      # label_x = 0.01
+    )
+    final_plot <- cowplot::plot_grid(title,
+                                     main_grid,
+                                     ncol=1,
+                                     rel_heights=c(0.1, 1))
+    ggplot2::ggsave(
+      filename = glue::glue("{id}.png"),
+      plot = final_plot,
+      device = "png",
+      path = file.path(outpath,"RRASSLER_images", fsep=.Platform$file.sep),
+      scale = 4,
+      width = 600,
+      height = 810,
+      units = "px",
+      dpi = 300,
+      bg = "white"
+    )
+
   }
 
   if(nrow(sf_frame)<3) {
@@ -159,12 +112,12 @@ holyhull = function(sf_frame=NULL,method='test',alpha_value=0.01, concavity = 2,
     ahull_poly = tryCatch(
       expr = {st_alpha_hull(x = sf::st_coordinates(sf_frame)[,1],y = sf::st_coordinates(sf_frame)[,2],alpha = alpha_value)},
       error = function(e){
-        concaveman::concaveman(sf_frame, concavity = 2, length_threshold = 0)
+        sf::st_convex_hull(sf::st_union(sf_frame))
       }
     )
   } else if(method=='concave') {
     ahull_poly = tryCatch(
-      expr = {concaveman::concaveman(sf_frame, concavity = 2, length_threshold = 0)},
+      expr = {concaveman::concaveman(sf_frame, concavity = concavity, length_threshold = length_threshold)},
       error = function(e){
         sf::st_convex_hull(sf::st_union(sf_frame))
       }

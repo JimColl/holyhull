@@ -1,7 +1,7 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
+#' @title make_batman_pts
+#' @description Returns a toy set of batman themed points which are used in test plotting.
 
-#' @return OUTPUT_DESCRIPTION
+#' @return geojson formatted point type FeatureCollection
 #' @details DETAILS
 #' @examples
 #' \dontrun{
@@ -68,5 +68,5 @@ make_batman_pts = function() {
   { "type": "Feature", "properties": { "id": null }, "geometry": { "type": "Point", "coordinates": [ -105.136091692981012, 40.569079622761087 ] } }
   ]
   }' |> geojsonsf::geojson_sf()
-  retunr(batman_pts)
+  return(batman_pts)
 }

@@ -1,8 +1,8 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param hull PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title ahull2lines
+#' @description gratefully pilfered from alphahull
+#' @param hull pass through for hull object
+#' @return a SpatialLines object
+#' @details Code gratefully pilfered from alphahull package so that I could expose parameters
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -15,7 +15,7 @@
 #' @export
 #' @importFrom sp Lines SpatialLines
 
-ahull2lines <- function(hull){
+ahull2lines <- function(hull) {
   arclist <- hull$arcs
   lines <- list()
   for (i in 1:nrow(arclist)) {
@@ -25,7 +25,7 @@ ahull2lines <- function(hull){
     vector_i <- arclist[i, 4:5]
     theta_i <- arclist[i, 6]
     # Convert arc i into a Line object
-    line_i <- fn_arc2line(center = center_i, r = radius_i, vector = vector_i, theta = theta_i)
+    line_i <- arc2line(center = center_i, r = radius_i, vector = vector_i, theta = theta_i)
     list_length <- length(lines)
     if(list_length > 0){
       # If a line has already been added to the list of lines

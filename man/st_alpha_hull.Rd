@@ -2,25 +2,25 @@
 % Please edit documentation in R/st_alpha_hull.R
 \name{st_alpha_hull}
 \alias{st_alpha_hull}
-\title{FUNCTION_TITLE}
+\title{st_alpha_hull}
 \usage{
 st_alpha_hull(x_in_4326, y_in_4326, alpha_value = 0.01)
 }
 \arguments{
-\item{x_in_4326}{PARAM_DESCRIPTION}
+\item{x_in_4326}{x_in_4326}
 
-\item{y_in_4326}{PARAM_DESCRIPTION}
+\item{y_in_4326}{y_in_4326}
 
-\item{alpha_value}{PARAM_DESCRIPTION, Default: 0.01}
+\item{alpha_value}{alpha_value to pass to alphahull package, Default: 0.01}
 }
 \value{
-OUTPUT_DESCRIPTION
+hull in 6349 (a compound crs with an explicit vertical datum)
 }
 \description{
-FUNCTION_DESCRIPTION
+gratefully pilfered and wrapper-d around alphahull
 }
 \details{
-DETAILS
+Code gratefully pilfered from alphahull package so that I could expose parameters, and renamed incorrectly so that I don't have to wonder what to start my hull auto completes with
 }
 \examples{
 \dontrun{

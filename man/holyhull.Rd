@@ -2,7 +2,7 @@
 % Please edit documentation in R/holyhull.R
 \name{holyhull}
 \alias{holyhull}
-\title{FUNCTION_TITLE}
+\title{holyhull}
 \usage{
 holyhull(
   sf_frame = NULL,
@@ -13,24 +13,24 @@ holyhull(
 )
 }
 \arguments{
-\item{sf_frame}{PARAM_DESCRIPTION, Default: NULL}
+\item{sf_frame}{sf points in 4236 that you want to wrap, Default: NULL}
 
-\item{method}{PARAM_DESCRIPTION, Default: 'test'}
+\item{method}{string to control what hull to generate. One of 'test' for a comparison map concave for concaveman ahull for alphahull or, Default: 'test'}
 
-\item{alpha_value}{PARAM_DESCRIPTION, Default: 0.01}
+\item{alpha_value}{Alpha value to pass to alphahull execution, Default: 0.01}
 
-\item{concavity}{PARAM_DESCRIPTION, Default: 2}
+\item{concavity}{concavity value to pass to concaveman execution, Default: 2}
 
 \item{length_threshold}{PARAM_DESCRIPTION, Default: 0}
 }
 \value{
-OUTPUT_DESCRIPTION
+requested hull or st_convex_hull if requested hull errors out
 }
 \description{
-FUNCTION_DESCRIPTION
+A wrapper around several useful hull creation tools and utilities with a common entry point
 }
 \details{
-DETAILS
+master wrapper through which data is accessed
 }
 \examples{
 \dontrun{

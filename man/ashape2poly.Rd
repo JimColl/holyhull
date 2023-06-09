@@ -2,7 +2,7 @@
 % Please edit documentation in R/ashape2poly.R
 \name{ashape2poly}
 \alias{ashape2poly}
-\title{FUNCTION_TITLE}
+\title{ashape2poly}
 \usage{
 ashape2poly(ashape)
 }
@@ -10,13 +10,13 @@ ashape2poly(ashape)
 \item{ashape}{PARAM_DESCRIPTION}
 }
 \value{
-OUTPUT_DESCRIPTION
+pathX pts
 }
 \description{
-FUNCTION_DESCRIPTION
+gratefully pilfered from alphahull
 }
 \details{
-DETAILS
+Code gratefully pilfered from alphahull package so that I could expose parameters
 }
 \examples{
 \dontrun{

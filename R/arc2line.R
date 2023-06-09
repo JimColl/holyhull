@@ -1,12 +1,12 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param center PARAM_DESCRIPTION
-#' @param r PARAM_DESCRIPTION
-#' @param vector PARAM_DESCRIPTION
-#' @param theta PARAM_DESCRIPTION
-#' @param npoints PARAM_DESCRIPTION, Default: 100
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @title arc2line
+#' @description gratefully pilfered from alphahull
+#' @param center pass through for hull object
+#' @param r pass through for hull object
+#' @param vector pass through for hull object
+#' @param theta pass through for hull object
+#' @param npoints pass through for hull object, Default: 100
+#' @return sp lines
+#' @details Code gratefully pilfered from alphahull package so that I could expose parameters
 #' @examples
 #' \dontrun{
 #' if(interactive()){
