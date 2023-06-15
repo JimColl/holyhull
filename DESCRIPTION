@@ -1,12 +1,12 @@
 Package: holyhull
 Type: Package
-Title: Wrap Your Points in a Hull Batman!
+Title: Wrap your points in a Hull Batman!
 Version: 0.0.01
-Author: Jim Coll et al.
+Author: Jim Coll
 Maintainer: Jim Coll <jamesmcoll@gmail.com>
-Description: Apologies for the formatting this is some syntax of the dark and mysterious kind that I have yet to figure out, but it's not markdown or internally consistant? A wrapper around several useful hull creation tools and utilities.  Before you use this junk please consider using it's constituant utilities whos authors deserve all of the credit here, including Yihui Xie and his [alphahull package](https://yihui.org/en/2010/04/alphahull-an-r-package-for-alpha-convex-hull/) - [source](https://cran.r-project.org/web/packages/alphahull/alphahull.pdf)
- [concaveman](https://github.com/mapbox/concaveman) - [source](https://cran.r-project.org/web/packages/concaveman/index.html) and [ST_ConvexHull](https://postgis.net/docs/ST_ConvexHull.html) via SF - [source](https://cran.r-project.org/web/packages/sf/index.html)
-License: ??
+Description: A wrapper around several useful hull creation tools and utilities.  Before you use this junk please consider using it's constituant utilities whos authors deserve all of the credit here, including Yihui Xie's [alphahull package](https://yihui.org/en/2010/04/alphahull-an-r-package-for-alpha-convex-hull/) - [source](https://cran.r-project.org/web/packages/alphahull/alphahull.pdf)
+ & [concaveman](https://github.com/mapbox/concaveman) - [source](https://cran.r-project.org/web/packages/concaveman/index.html) & [ST_ConvexHull](https://postgis.net/docs/ST_ConvexHull.html) via SF - [source](https://cran.r-project.org/web/packages/sf/index.html)
+License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3

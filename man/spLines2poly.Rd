@@ -7,10 +7,10 @@
 spLines2poly(sp_lines)
 }
 \arguments{
-\item{sp_lines}{PARAM_DESCRIPTION}
+\item{sp_lines}{pass through for hull object}
 }
 \value{
-OUTPUT_DESCRIPTION
+sp_polys
 }
 \description{
 gratefully pilfered and wrapper-d around alphahull
